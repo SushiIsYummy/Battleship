@@ -1,0 +1,84 @@
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+
+  width: 100%;
+  height: 100%;
+}
+
+.board-container h1 {
+  text-align: center;
+  padding: 5px;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  grid-gap: 1px;
+
+  width: 500px;
+  height: 500px;
+}
+
+.gameboard .cell {
+  border: 1px solid green;
+}
+
+svg {
+  /* width: 15px;
+  height: 100px; */
+}
+
+.hit-marker.hit {
+  fill: red;
+}
+
+.hit-marker.miss {
+  fill: blue;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.enemy-cell {
+  cursor: crosshair;
+  position: relative;
+}
+
+.enemy-cell:hover {
+  background-color: rgb(218, 217, 217);
+}
+
+.enemy-cell.hit::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* margin: -4px; */
+  border-radius: 50%;
+  background-color: #000000a9;
+}
+
+.cell[data-ship-name='carrier'] {
+  background-color: green;
+}
+.cell[data-ship-name='battleship'] {
+  background-color: blue;
+}
+.cell[data-ship-name='cruiser'] {
+  background-color: rgb(228, 182, 31);
+}
+.cell[data-ship-name='submarine'] {
+  background-color: purple;
+}
+.cell[data-ship-name='destroyer'] {
+  background-color: yellow;
+}
