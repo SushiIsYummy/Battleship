@@ -1,8 +1,28 @@
 /*! ../../../../src/css/styles.css */
 
+/*! ../../data/ShipData */
+
+/*! ../audio/audioUtils */
+
+/*! ../factories/Ship */
+
+/*! ./DOM/addMarkerOnGameboard */
+
+/*! ./DOM/createGameboardGrid */
+
+/*! ./DOM/renderShipsOnGameboard */
+
+/*! ./boom.mp3 */
+
+/*! ./factories/Gameboard */
+
+/*! ./factories/Player */
+
+/*! ./js/DOM/addMarkerOnGameboard */
+
 /*! ./js/DOM/createGameboardGrid */
 
-/*! ./js/DOM/placeShipOnGameboard */
+/*! ./js/DOM/renderShipsOnGameboard */
 
 /*! ./js/factories/Gameboard */
 
@@ -10,13 +30,41 @@
 
 /*! ./js/factories/Ship */
 
+/*! ./js/gameplay */
+
+/*! ./js/utils/gameboardUtils */
+
+/*! ./miss-sound.mp3 */
+
+/*! ./utils/gameboardUtils */
+
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
 
 /*!****************************!*\
+  !*** ./src/audio/boom.mp3 ***!
+  \****************************/
+
+/*!****************************!*\
   !*** ./src/css/styles.css ***!
   \****************************/
+
+/*!****************************!*\
+  !*** ./src/js/gameplay.js ***!
+  \****************************/
+
+/*!******************************!*\
+  !*** ./src/data/ShipData.js ***!
+  \******************************/
+
+/*!*********************************!*\
+  !*** ./src/audio/audioUtils.js ***!
+  \*********************************/
+
+/*!**********************************!*\
+  !*** ./src/audio/miss-sound.mp3 ***!
+  \**********************************/
 
 /*!**********************************!*\
   !*** ./src/js/factories/Ship.js ***!
@@ -30,10 +78,18 @@
   !*** ./src/js/factories/Gameboard.js ***!
   \***************************************/
 
+/*!****************************************!*\
+  !*** ./src/js/utils/gameboardUtils.js ***!
+  \****************************************/
+
 /*!*******************************************!*\
   !*** ./src/js/DOM/createGameboardGrid.js ***!
   \*******************************************/
 
 /*!********************************************!*\
-  !*** ./src/js/DOM/placeShipOnGameboard.js ***!
+  !*** ./src/js/DOM/addMarkerOnGameboard.js ***!
   \********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/js/DOM/renderShipsOnGameboard.js ***!
+  \**********************************************/
