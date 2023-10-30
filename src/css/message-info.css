@@ -1,0 +1,19 @@
+.message-info {
+  text-align: center;
+  padding: 30px;
+  font-size: 5rem;
+  color: green;
+  display: hidden;
+
+  opacity: 1; /* Start with zero opacity */
+  animation: fadeOut 3s ease-in forwards; /* Use the fadeIn animation */
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1; /* Start with zero opacity */
+  }
+  to {
+    opacity: 0; /* End with full opacity */
+  }
+}

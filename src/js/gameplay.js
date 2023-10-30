@@ -1,9 +1,10 @@
 import createGameboardGrid from './DOM/createGameboardGrid';
-import { addHitMarker, placeShipsRandomly } from './utils/gameboardUtils';
+import { placeShipsRandomly } from './utils/gameboardUtils';
 import renderShipsOnGameBoard from './DOM/renderShipsOnGameboard';
 import addMarker from './DOM/addMarkerOnGameboard';
 import Gameboard from './factories/Gameboard';
 import Player from './factories/Player';
+import { playExplosionSound, playMissSound } from '../audio/audioUtils';
 
 const playerBoard = Gameboard();
 const enemyBoard = Gameboard();
@@ -56,11 +57,13 @@ function enemyAttack() {
   gameState.enemy.attack(gameState.player, row, col);
   if (gameState.playerBoard.cellHitInfo(row, col) === 'hit') {
     addMarker(gameState.playerBoard, 'player-board', row, col, 'hit');
+    playExplosionSound();
     console.log('ENEMY HIT!');
     // setTimeout(enemyAttack, 1000);
     enemyAttack();
   } else if (gameState.playerBoard.cellHitInfo(row, col) === 'miss') {
     console.log('ENEMY MISS!');
+    playMissSound();
     addMarker(gameState.playerBoard, 'player-board', row, col, 'miss');
     gameState.switchPlayer();
   }
@@ -85,6 +88,7 @@ function activateEnemyCells() {
         console.log(row, col);
         gameState.player.attack(gameState.enemy, row, col);
         if (gameState.enemyBoard.cellHitInfo(row, col) === 'hit') {
+          playExplosionSound();
           addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'hit');
           let hitShip = gameState.enemyBoard.getBoard()[row][col];
           console.log(hitShip);
@@ -96,6 +100,7 @@ function activateEnemyCells() {
             return;
           }
         } else if (gameState.enemyBoard.cellHitInfo(row, col) === 'miss') {
+          playMissSound();
           addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'miss');
           // setTimeout(enemyAttack, 1000);
           enemyAttack();
