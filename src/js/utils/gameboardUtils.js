@@ -17,5 +17,3 @@ export function placeShipsRandomly(gameboard) {
     } while (gameboard.placeShip(ship, shipDataCopy) !== true);
   });
 }
-export function addHitMarker(gameboard, row, col) {}
-export function addMissMarker(gameboard, row, col) {}

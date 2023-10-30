@@ -1,35 +1,123 @@
 .game-container {
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 50px;
+  align-items: flex-start;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, var(--gameboard-size));
+  justify-content: center;
+  gap: 100px;
+  margin: 0 50px;
+  padding: 0 0 10px 0;
+}
 
-  /* width: 100%;
-  height: 100%; */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .board-container h1 {
   text-align: center;
-  padding: 5px;
+}
+
+.board-container .random-board-button {
+  width: max-content;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 14px;
+  border: none;
+  color: white;
+  background-color: blue;
 }
 
 .gameboard {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  grid-gap: 1px;
+  /* grid-gap: 1px; */
 
-  width: 500px;
-  height: 500px;
+  justify-self: center;
+  width: var(--gameboard-size);
+  height: var(--gameboard-size);
 }
 
 .gameboard .cell {
-  border: 1px solid green;
+  border: 1px solid rgb(163, 53, 53);
 }
 
-svg {
-  /* width: 15px;
-  height: 100px; */
+.enemy-board {
+  position: relative;
+}
+.enemy-board.game-not-started::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-shadow: white 0px 0 5px;
+  backdrop-filter: blur(1px);
+}
+
+.start-game-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+
+  font-size: 2rem;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: none;
+  background-color: green;
+  color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.start-game-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.start-game-button:active {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.start-game-button.game-started,
+.random-board-button.game-started {
+  display: none;
+}
+
+.reset-game-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reset-game-button {
+  display: none;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: none;
+  background-color: blue;
+  color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.reset-game-button:hover,
+.random-board-button:hover {
+  transform: scale(1.1);
+}
+
+.reset-game-button:active,
+.random-board-button:active {
+  transform: scale(1);
+}
+
+.reset-game-button.game-started {
+  display: block;
 }
 
 .hit-marker.hit {
@@ -62,7 +150,6 @@ svg {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* margin: -4px; */
   border-radius: 50%;
   background-color: #000000a9;
 }

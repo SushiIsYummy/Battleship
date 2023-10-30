@@ -1,3 +1,6 @@
+import Ship from './Ship';
+import ShipData from '../../data/ShipData';
+
 function Gameboard() {
   let boardSize = 10;
   let board = Array(boardSize)
@@ -66,6 +69,22 @@ function Gameboard() {
       }
       return false;
     },
+    placeShipsRandomly() {
+      ShipData.forEach((shipData) => {
+        let ship = Ship(shipData.name, shipData.length);
+        let shipDataCopy = { ...shipData };
+        do {
+          let row = Math.floor(Math.random() * (this.getSize() - 0) + 0);
+          let col = Math.floor(Math.random() * (this.getSize() - 0) + 0);
+          let orientationBool = Math.round(Math.random());
+          let orientation = orientationBool ? 'horizontal' : 'vertical';
+          shipDataCopy.row = row;
+          shipDataCopy.col = col;
+          shipDataCopy.orientation = orientation;
+          console.log(shipDataCopy);
+        } while (this.placeShip(ship, shipDataCopy) !== true);
+      });
+    },
     allShipsSunk() {
       for (let i = 0; i < ships.length; i++) {
         if (!ships[i].isSunk()) {
@@ -83,6 +102,13 @@ function Gameboard() {
     getBoard() {
       // return JSON.parse(JSON.stringify(board));
       return board;
+    },
+    clearBoard() {
+      for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board.length; col++) {
+          board[row][col] = null;
+        }
+      }
     },
     getBoardHits() {
       return JSON.parse(JSON.stringify(boardHits));

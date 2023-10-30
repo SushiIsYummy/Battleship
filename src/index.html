@@ -11,18 +11,23 @@
   <header>
     <h1 class="game-title">Battleship</h1>
   </header>
-  <div class="message-info"></div>
+  <div class="message-info">&nbsp;</div>
   <div class="game-container">
     <div class="board-container">
       <h1>Your board</h1>
       <div class="gameboard player-board">
       </div>
+      <button class="random-board-button">Random Board</button>
     </div>
     <div class="board-container">
       <h1>Enemy board</h1>
-      <div class="gameboard enemy-board">
+      <div class="gameboard enemy-board game-not-started">
+        <button class="start-game-button">Start</button>
       </div>
     </div>
+  </div>
+  <div class="reset-game-button-container">
+    <button class="reset-game-button">Reset Game</button>
   </div>
 </body>
 

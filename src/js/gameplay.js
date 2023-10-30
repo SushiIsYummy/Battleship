@@ -5,6 +5,7 @@ import addMarker from './DOM/addMarkerOnGameboard';
 import Gameboard from './factories/Gameboard';
 import Player from './factories/Player';
 import { playExplosionSound, playMissSound } from '../audio/audioUtils';
+import clearGameboardDOM from './DOM/clearGameboardDOM';
 
 const playerBoard = Gameboard();
 const enemyBoard = Gameboard();
@@ -28,7 +29,14 @@ const gameState = {
   gameOver: false,
 };
 
-export function initializeGame() {
+export function setUpBoards() {
+  createGameboardGrid(gameState.playerBoard, 'player-board', 'player-cell');
+  createGameboardGrid(gameState.enemyBoard, 'enemy-board', 'enemy-cell');
+  gameState.playerBoard.placeShipsRandomly();
+  renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
+}
+
+export function startGame() {
   let turnStart = Math.round(Math.random());
   gameState.currentPlayer = gameState.player;
   // if (turnStart === 0) {
@@ -36,16 +44,32 @@ export function initializeGame() {
   // } else {
   //   gameState.currentPlayer = gameState.enemy;
   // }
-  createGameboardGrid(gameState.playerBoard, 'player-board', 'player-cell');
-  createGameboardGrid(gameState.enemyBoard, 'enemy-board', 'enemy-cell');
-  placeShipsRandomly(gameState.playerBoard);
-  placeShipsRandomly(gameState.enemyBoard);
-  renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
+  changeMessage('Game Start!');
+  gameState.enemyBoard.placeShipsRandomly();
   activateEnemyCells();
   gameState.playerBoard.displayBoard();
-  console.table(gameState.enemyBoard.getBoardHits());
-  console.table(gameState.enemyBoard.displayBoard());
-  console.table(gameState.enemyBoard.getBoardHits());
+  let enemyBoardDOM = document.querySelector('.enemy-board');
+  enemyBoardDOM.classList.remove('game-not-started');
+  let startGameButton = document.querySelector('.start-game-button');
+  startGameButton.classList.add('game-started');
+  let randomBoardButton = document.querySelector('button.random-board-button');
+  randomBoardButton.classList.add('game-started');
+  let resetGameButton = document.querySelector('button.reset-game-button');
+  resetGameButton.classList.add('game-started');
+  let messageInfo = document.querySelector('.message-info');
+  messageInfo.addEventListener('animationend', () => {
+    messageInfo.textContent = '\xa0';
+    messageInfo.classList.remove('fade-out');
+  });
+  // console.table(gameState.enemyBoard.getBoardHits());
+  // console.table(gameState.enemyBoard.displayBoard());
+  // console.table(gameState.enemyBoard.getBoardHits());
+}
+
+function changeMessage(message) {
+  let messageInfo = document.querySelector('.message-info');
+  messageInfo.textContent = message;
+  messageInfo.classList.add('fade-out');
 }
 
 function enemyAttack() {
@@ -123,3 +147,11 @@ function revealShip(ship) {
     cell.dataset.shipName = ship.name;
   }
 }
+
+let randomBoard = document.querySelector('.random-board-button');
+randomBoard.addEventListener('click', () => {
+  clearGameboardDOM('player-board');
+  gameState.playerBoard.clearBoard();
+  gameState.playerBoard.placeShipsRandomly();
+  renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
+});
