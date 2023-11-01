@@ -7,6 +7,7 @@ import Player from './factories/Player';
 import { playExplosionSound, playMissSound } from '../audio/audioUtils';
 import clearGameboardDOM from './DOM/clearGameboardDOM';
 
+const FADE_OUT_EFFECT = 'fade-out';
 const playerBoard = Gameboard();
 const enemyBoard = Gameboard();
 
@@ -18,6 +19,7 @@ const gameState = {
   enemyBoard: enemyBoard,
   player: player,
   enemy: enemy,
+  winner: null,
   currentPlayer: null, // Initialize with the player's turn
   switchPlayer() {
     if (this.currentPlayer === this.player) {
@@ -29,7 +31,16 @@ const gameState = {
   gameOver: false,
 };
 
-export function setUpBoards() {
+export function setUpPreGameStart() {
+  let randomBoard = document.querySelector('.random-board-button');
+  randomBoard.addEventListener('click', () => {
+    clearGameboardDOM('player-board');
+    gameState.playerBoard.clearBoard();
+    gameState.playerBoard.placeShipsRandomly();
+    renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
+  });
+  let startGameButton = document.querySelector('.start-game-button');
+  startGameButton.addEventListener('click', startGame);
   createGameboardGrid(gameState.playerBoard, 'player-board', 'player-cell');
   createGameboardGrid(gameState.enemyBoard, 'enemy-board', 'enemy-cell');
   gameState.playerBoard.placeShipsRandomly();
@@ -44,7 +55,7 @@ export function startGame() {
   // } else {
   //   gameState.currentPlayer = gameState.enemy;
   // }
-  changeMessage('Game Start!');
+  changeMessage('Game Start!', FADE_OUT_EFFECT);
   gameState.enemyBoard.placeShipsRandomly();
   activateEnemyCells();
   gameState.playerBoard.displayBoard();
@@ -57,19 +68,23 @@ export function startGame() {
   let resetGameButton = document.querySelector('button.reset-game-button');
   resetGameButton.classList.add('game-started');
   let messageInfo = document.querySelector('.message-info');
-  messageInfo.addEventListener('animationend', () => {
+  messageInfo.addEventListener('animationend', (e) => {
     messageInfo.textContent = '\xa0';
-    messageInfo.classList.remove('fade-out');
+    console.log(`animation name: ${e.animationName}`);
+    messageInfo.classList.remove(FADE_OUT_EFFECT);
   });
   // console.table(gameState.enemyBoard.getBoardHits());
-  // console.table(gameState.enemyBoard.displayBoard());
+  console.log('enemy board');
+  gameState.enemyBoard.displayBoard();
   // console.table(gameState.enemyBoard.getBoardHits());
 }
 
-function changeMessage(message) {
+function changeMessage(message, effectClass) {
   let messageInfo = document.querySelector('.message-info');
   messageInfo.textContent = message;
-  messageInfo.classList.add('fade-out');
+  if (effectClass !== undefined) {
+    messageInfo.classList.add(FADE_OUT_EFFECT);
+  }
 }
 
 function enemyAttack() {
@@ -84,6 +99,11 @@ function enemyAttack() {
     playExplosionSound();
     console.log('ENEMY HIT!');
     // setTimeout(enemyAttack, 1000);
+    console.log(`player board all ships sunk: ${gameState.playerBoard.allShipsSunk()}`);
+    if (playerHasWon(gameState.enemy)) {
+      handleGameEnd();
+      return;
+    }
     enemyAttack();
   } else if (gameState.playerBoard.cellHitInfo(row, col) === 'miss') {
     console.log('ENEMY MISS!');
@@ -96,47 +116,64 @@ function enemyAttack() {
 
 function activateEnemyCells() {
   const enemyBoard = document.querySelector('.enemy-board');
-
-  enemyBoard.addEventListener('click', (e) => {
-    if (gameIsWon()) {
-      console.log('GAME IS OVER!!!');
-      return;
-    }
-    let cell = e.target;
-    if (cell.classList.contains('enemy-cell')) {
-      let row = Number(cell.dataset.row);
-      let col = Number(cell.dataset.col);
-      console.log(`available hit: ${gameState.player.hasAvailableHit(row, col)}`);
-      console.log(gameState.currentPlayer === gameState.player);
-      if (gameState.currentPlayer === gameState.player && !gameState.gameOver && gameState.player.hasAvailableHit(row, col)) {
-        console.log(row, col);
-        gameState.player.attack(gameState.enemy, row, col);
-        if (gameState.enemyBoard.cellHitInfo(row, col) === 'hit') {
-          playExplosionSound();
-          addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'hit');
-          let hitShip = gameState.enemyBoard.getBoard()[row][col];
-          console.log(hitShip);
-          if (hitShip.isSunk()) {
-            revealShip(hitShip);
-          }
-          if (gameIsWon()) {
-            console.log('GAME IS OVER!!!');
-            return;
-          }
-        } else if (gameState.enemyBoard.cellHitInfo(row, col) === 'miss') {
-          playMissSound();
-          addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'miss');
-          // setTimeout(enemyAttack, 1000);
-          enemyAttack();
-          gameState.switchPlayer();
-        }
-      }
-    }
-  });
+  enemyBoard.addEventListener('click', attackEnemy);
 }
 
-function gameIsWon() {
-  return gameState.playerBoard.allShipsSunk() || gameState.enemyBoard.allShipsSunk();
+function attackEnemy(e) {
+  if (playerHasWon(gameState.player)) {
+    console.log('GAME IS OVER!!!');
+    return;
+  }
+  let cell = e.target;
+  if (cell.classList.contains('enemy-cell')) {
+    let row = Number(cell.dataset.row);
+    let col = Number(cell.dataset.col);
+    console.log(`available hit: ${gameState.player.hasAvailableHit(row, col)}`);
+    console.log(gameState.currentPlayer === gameState.player);
+    if (gameState.currentPlayer === gameState.player && !gameState.gameOver && gameState.player.hasAvailableHit(row, col)) {
+      console.log(row, col);
+      gameState.player.attack(gameState.enemy, row, col);
+      if (gameState.enemyBoard.cellHitInfo(row, col) === 'hit') {
+        playExplosionSound();
+        addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'hit');
+        let hitShip = gameState.enemyBoard.getBoard()[row][col];
+        console.log(hitShip);
+        if (hitShip.isSunk()) {
+          revealShip(hitShip);
+        }
+        if (playerHasWon(gameState.player)) {
+          handleGameEnd();
+          return;
+        }
+      } else if (gameState.enemyBoard.cellHitInfo(row, col) === 'miss') {
+        playMissSound();
+        addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'miss');
+        // setTimeout(enemyAttack, 1000);
+        enemyAttack();
+        gameState.switchPlayer();
+      }
+    }
+  }
+}
+
+function playerHasWon(player) {
+  let opponentGameboard = player === gameState.player ? gameState.enemyBoard : gameState.playerBoard;
+  let allEnemyShipsSunk = opponentGameboard.allShipsSunk();
+  if (allEnemyShipsSunk) {
+    gameState.winner = player;
+  }
+  return allEnemyShipsSunk;
+}
+
+function handleGameEnd() {
+  const enemyBoard = document.querySelector('.enemy-board');
+  enemyBoard.removeEventListener('click', attackEnemy);
+
+  if (gameState.winner === gameState.player) {
+    changeMessage('You Win!');
+  } else if (gameState.winner === gameState.enemy) {
+    changeMessage('You Lose!');
+  }
 }
 
 function revealShip(ship) {
@@ -147,11 +184,3 @@ function revealShip(ship) {
     cell.dataset.shipName = ship.name;
   }
 }
-
-let randomBoard = document.querySelector('.random-board-button');
-randomBoard.addEventListener('click', () => {
-  clearGameboardDOM('player-board');
-  gameState.playerBoard.clearBoard();
-  gameState.playerBoard.placeShipsRandomly();
-  renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
-});

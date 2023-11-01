@@ -81,7 +81,7 @@ function Gameboard() {
           shipDataCopy.row = row;
           shipDataCopy.col = col;
           shipDataCopy.orientation = orientation;
-          console.log(shipDataCopy);
+          // console.log(shipDataCopy);
         } while (this.placeShip(ship, shipDataCopy) !== true);
       });
     },

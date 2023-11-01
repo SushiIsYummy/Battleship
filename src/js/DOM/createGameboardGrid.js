@@ -1,8 +1,8 @@
 function createGameboardGrid(gameboard, gameboardClass, playerClass) {
   let gameboardSize = gameboard.getSize();
-  console.log(gameboardClass);
+  // console.log(gameboardClass);
   let selectedGameboard = document.querySelector(`.${gameboardClass}`);
-  console.log(selectedGameboard);
+  // console.log(selectedGameboard);
   for (let row = 0; row < gameboardSize; row++) {
     for (let col = 0; col < gameboardSize; col++) {
       let cell = document.createElement('div');
