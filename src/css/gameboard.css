@@ -8,20 +8,37 @@
   justify-content: center;
   gap: 100px;
   margin: 0 50px;
-  padding: 0 0 10px 0;
+  /* padding: 0 0 10px 0; */
 }
 
 .board-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  position: relative;
 }
 
 .board-container h1 {
   text-align: center;
+  padding: 10px;
+  background-color: rgb(218, 218, 218);
 }
 
-.board-container .random-board-button {
+.board-container.not-current-turn {
+  opacity: 0.6;
+}
+
+.player-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-side .board-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.player-side .random-board-button {
   width: max-content;
   padding: 10px 20px;
   font-size: 1rem;
@@ -37,14 +54,16 @@
   grid-template-rows: repeat(10, 1fr);
   /* grid-gap: 1px; */
 
-  border: 1px solid rgb(163, 53, 53);
+  /* border: 1px solid rgb(163, 53, 53); */
+  border-top: none;
   justify-self: center;
   width: var(--gameboard-size);
   height: var(--gameboard-size);
+  background-color: #67f7ef;
 }
 
 .gameboard .cell {
-  border: 1px solid rgb(163, 53, 53);
+  border-radius: 14px;
 }
 
 .enemy-board {
@@ -94,6 +113,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: 20px;
 }
 
 .reset-game-button {
@@ -136,15 +157,15 @@
 }
 
 .enemy-cell {
-  cursor: crosshair;
+  cursor: grab;
   position: relative;
 }
 
-.enemy-cell:hover {
-  background-color: rgb(218, 217, 217);
+.enemy-cell:not(.hit):hover {
+  content: url('/src/img/target.svg');
 }
 
-.enemy-cell.hit::before {
+/* .enemy-cell.hit::before {
   content: '';
   width: 15px;
   height: 15px;
@@ -153,7 +174,7 @@
   left: 50%;
   border-radius: 50%;
   background-color: #000000a9;
-}
+} */
 
 .cell[data-ship-name='carrier'] {
   background-color: green;

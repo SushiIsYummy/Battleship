@@ -4,9 +4,11 @@ function Ship(name, length) {
   return {
     name,
     length,
-    hit(row, col) {
-      positions.push({ row, col });
+    hit() {
       hits++;
+    },
+    resetHits() {
+      hits = 0;
     },
     isSunk() {
       if (hits >= this.length) {
@@ -16,6 +18,12 @@ function Ship(name, length) {
     },
     getPositions() {
       return JSON.parse(JSON.stringify(positions));
+    },
+    addPosition(row, col) {
+      if (positions.length >= this.length) {
+        return;
+      }
+      positions.push({ row, col });
     },
   };
 }

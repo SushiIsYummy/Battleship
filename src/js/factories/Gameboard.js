@@ -44,7 +44,7 @@ function Gameboard() {
       }
       let ship = board[row][col];
       if (ship !== null) {
-        ship.hit(row, col);
+        ship.hit();
         boardHits[row][col] = 'hit';
       } else {
         boardHits[row][col] = 'miss';
@@ -53,18 +53,18 @@ function Gameboard() {
     placeShip(ship, shipData) {
       if (isValidShipPlacement(shipData)) {
         const { row, col, name, length, orientation } = shipData;
-
         if (orientation === 'horizontal') {
           for (let i = 0; i < length; i++) {
             board[row][col + i] = ship;
-            ships.push(ship);
+            ship.addPosition(row, col + i);
           }
         } else if (orientation === 'vertical') {
           for (let i = 0; i < length; i++) {
             board[row + i][col] = ship;
-            ships.push(ship);
+            ship.addPosition(row + i, col);
           }
         }
+        ships.push(ship);
         return true;
       }
       return false;
@@ -104,14 +104,27 @@ function Gameboard() {
       return board;
     },
     clearBoard() {
-      for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board.length; col++) {
+      for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
           board[row][col] = null;
         }
       }
     },
     getBoardHits() {
       return JSON.parse(JSON.stringify(boardHits));
+    },
+    resetBoardHits() {
+      for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+          boardHits[row][col] = false;
+        }
+      }
+    },
+    getShips() {
+      return [...ships];
+    },
+    removeAllShips() {
+      ships = [];
     },
     cellHitInfo(row, col) {
       return boardHits[row][col];

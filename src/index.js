@@ -5,9 +5,9 @@ import renderShipsOnGameBoard from './js/DOM/renderShipsOnGameboard';
 import Gameboard from './js/factories/Gameboard';
 import Player from './js/factories/Player';
 import Ship from './js/factories/Ship';
-import { startGame, setUpPreGameStart } from './js/gameplay';
+import { startGame, firstLoadSetUp } from './js/gameController';
 import { placeShipsRandomly } from './js/utils/gameboardUtils';
 
 import '/src/css/styles.css';
 
-setUpPreGameStart();
+firstLoadSetUp();

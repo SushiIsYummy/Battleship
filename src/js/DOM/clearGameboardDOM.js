@@ -6,11 +6,14 @@ function clearGameboardDOM(gameboardClass) {
     if (cell.hasAttribute('data-ship-name')) {
       delete cell.dataset.shipName;
     }
-    // let hitMarker = cell.querySelector('.hit-marker');
+    if (cell.classList.contains('hit')) {
+      cell.classList.remove('hit');
+    }
+    let hitMarker = cell.querySelector('.hit-marker');
 
-    // if (hitMarker) {
-    //   hitMarker.remove();
-    // }
+    if (hitMarker) {
+      hitMarker.remove();
+    }
   });
 }
 

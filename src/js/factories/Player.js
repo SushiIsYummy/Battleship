@@ -24,6 +24,14 @@ function Player(gameboard) {
       }
       return remainingHits;
     },
+    resetAvailableHits() {
+      let gameboardSize = this.gameboard.getSize();
+      for (let row = 0; row < gameboardSize; row++) {
+        for (let col = 0; col < gameboardSize; col++) {
+          availableHits[row][col] = true;
+        }
+      }
+    },
   };
 }
 
