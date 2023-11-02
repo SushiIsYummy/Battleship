@@ -81,7 +81,6 @@ function Gameboard() {
           shipDataCopy.row = row;
           shipDataCopy.col = col;
           shipDataCopy.orientation = orientation;
-          // console.log(shipDataCopy);
         } while (this.placeShip(ship, shipDataCopy) !== true);
       });
     },
@@ -93,9 +92,6 @@ function Gameboard() {
       }
       return true;
     },
-    // fillBoardRandomly(shipDataArray) {
-    //   shipDataArray.forEach((shipData) => {});
-    // },
     getSize() {
       return boardSize;
     },

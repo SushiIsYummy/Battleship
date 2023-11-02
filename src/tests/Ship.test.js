@@ -16,3 +16,11 @@ test('ship is hit but not sunk', () => {
   }
   expect(ship.isSunk()).toBeFalsy();
 });
+
+test('all parts of a ship is hit and is sunk', () => {
+  let ship = Ship('cruiser', 3);
+  for (let i = 0; i < ship.length; i++) {
+    ship.hit();
+  }
+  expect(ship.isSunk()).toBeTruthy();
+});

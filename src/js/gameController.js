@@ -49,7 +49,6 @@ export function firstLoadSetUp() {
   let messageInfo = document.querySelector('.message-info');
   messageInfo.addEventListener('animationend', (e) => {
     emptyMessage();
-    console.log(`animation name: ${e.animationName}`);
     messageInfo.classList.remove(FADE_OUT_EFFECT);
   });
 
@@ -76,7 +75,7 @@ function startGame() {
   // renderShipsOnGameBoard(gameState.enemyBoard, 'enemy-board');
 
   activateEnemyCells();
-  gameState.playerBoard.displayBoard();
+  // gameState.playerBoard.displayBoard();
 
   let enemyBoardDOM = document.querySelector('.enemy-board');
   enemyBoardDOM.classList.remove('game-not-started');
@@ -90,13 +89,6 @@ function startGame() {
   let resetGameButton = document.querySelector('button.reset-game-button');
   resetGameButton.classList.add('game-started');
   resetGameButton.addEventListener('click', resetGame);
-
-  // console.table(gameState.enemyBoard.getBoardHits());
-  console.log('enemy board');
-  gameState.enemyBoard.displayBoard();
-  // console.table(gameState.enemyBoard.getBoardHits());
-  console.log(gameState.playerBoard.getShips());
-  console.log(gameState.enemyBoard.getShips());
 }
 
 function changeMessage(message, effectClass) {
@@ -110,30 +102,23 @@ function changeMessage(message, effectClass) {
 function enemyAttack() {
   let remainingHits = gameState.enemy.getRemainingAvailableHits();
   let randomIndex = Math.floor(Math.random() * remainingHits.length);
-  console.log(randomIndex);
-  console.log(remainingHits);
   let { row, col } = remainingHits.splice(randomIndex, 1)[0];
   gameState.enemy.attack(gameState.player, row, col);
   if (gameState.playerBoard.cellHitInfo(row, col) === 'hit') {
     addMarker(gameState.playerBoard, 'player-board', row, col, 'hit');
     playExplosionSound();
-    console.log('ENEMY HIT!');
-    console.log(`player board all ships sunk: ${gameState.playerBoard.allShipsSunk()}`);
     if (playerHasWon(gameState.enemy)) {
       handleGameEnd();
       return;
     }
     enemyTimeoutIds.push(setTimeout(enemyAttack, enemyAttackTime));
-    // enemyAttack();
   } else if (gameState.playerBoard.cellHitInfo(row, col) === 'miss') {
-    console.log('ENEMY MISS!');
     playMissSound();
     addMarker(gameState.playerBoard, 'player-board', row, col, 'miss');
     gameState.switchPlayer();
     toggleGameboardOpacity('.player-side .board-container');
     toggleGameboardOpacity('.enemy-side .board-container');
   }
-  console.log('ENEMY ATTACK!');
 }
 
 function activateEnemyCells() {
@@ -143,24 +128,19 @@ function activateEnemyCells() {
 
 function attackEnemy(e) {
   if (playerHasWon(gameState.player)) {
-    console.log('GAME IS OVER!!!');
     return;
   }
   let cell = e.target;
   if (cell.classList.contains('enemy-cell')) {
     let row = Number(cell.dataset.row);
     let col = Number(cell.dataset.col);
-    console.log(`available hit: ${gameState.player.hasAvailableHit(row, col)}`);
-    console.log(gameState.currentPlayer === gameState.player);
     if (gameState.currentPlayer === gameState.player && !gameState.gameOver && gameState.player.hasAvailableHit(row, col)) {
-      console.log(row, col);
       gameState.player.attack(gameState.enemy, row, col);
       cell.classList.add('hit');
       if (gameState.enemyBoard.cellHitInfo(row, col) === 'hit') {
         playExplosionSound();
         addMarker(gameState.enemyBoard, 'enemy-board', row, col, 'hit');
         let hitShip = gameState.enemyBoard.getBoard()[row][col];
-        console.log(hitShip);
         if (hitShip.isSunk()) {
           revealShip(hitShip);
         }
@@ -204,7 +184,6 @@ function resetGame() {
   enemyTimeoutIds.forEach((timeoutId) => {
     clearTimeout(timeoutId);
   });
-  console.log(enemyTimeoutIds);
   enemyTimeoutIds.length = 0;
   gameState.winner = null;
   gameState.gameOver = false;
@@ -217,13 +196,14 @@ function resetGame() {
   });
   gameState.playerBoard.resetBoardHits();
   gameState.player.resetAvailableHits();
+
   gameState.enemyBoard.clearBoard();
   gameState.enemyBoard.resetBoardHits();
   gameState.enemy.resetAvailableHits();
   clearGameboardDOM('player-board');
   renderShipsOnGameBoard(gameState.playerBoard, 'player-board');
   // gameState.enemyBoard.placeShipsRandomly();
-  gameState.playerBoard.displayBoard();
+  // gameState.playerBoard.displayBoard();
   clearGameboardDOM('enemy-board');
   let enemyBoardDOM = document.querySelector('.enemy-board');
   enemyBoardDOM.classList.add('game-not-started');
@@ -260,9 +240,7 @@ function toggleGameboardOpacity(boardContainerClass) {
 
 function revealShip(ship) {
   let shipPositions = ship.getPositions();
-  console.log(shipPositions);
   for (let i = 0; i < shipPositions.length; i++) {
-    console.log(shipPositions[i].row, shipPositions[i].col);
     let cell = document.querySelector(`.enemy-cell[data-row="${shipPositions[i].row}"][data-col="${shipPositions[i].col}"]`);
     cell.dataset.shipName = ship.name;
   }

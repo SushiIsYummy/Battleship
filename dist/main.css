@@ -1,54 +1,176 @@
-/*!**********************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./src/css/global.css ***!
-  \**********************************************************************/
 :root {
   font-size: 16px;
+  --gameboard-size: 450px;
 }
 
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100vh;
 }
 
 body {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/*!*************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./src/css/gameboard.css ***!
-  \*************************************************************************/
-.game-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
+main {
+  /* display: flex; */
+  /* flex-direction: column; */
+  flex-grow: 1;
 
-  /* width: 100%;
-  height: 100%; */
+  background: #bdc3c7; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.game-container {
+  /* display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, var(--gameboard-size));
+  justify-content: center;
+  gap: 100px;
+  margin: 0 50px;
+  /* padding: 0 0 10px 0; */
+}
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .board-container h1 {
   text-align: center;
-  padding: 5px;
+  padding: 10px;
+  background-color: rgb(218, 218, 218);
+}
+
+.board-container.not-current-turn {
+  opacity: 0.6;
+}
+
+.player-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-side .board-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.player-side .random-board-button {
+  width: max-content;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 14px;
+  border: none;
+  color: white;
+  background-color: blue;
 }
 
 .gameboard {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  grid-gap: 1px;
+  /* grid-gap: 1px; */
 
-  width: 500px;
-  height: 500px;
+  /* border: 1px solid rgb(163, 53, 53); */
+  border-top: none;
+  justify-self: center;
+  width: var(--gameboard-size);
+  height: var(--gameboard-size);
+  background-color: #67f7ef;
 }
 
 .gameboard .cell {
-  border: 1px solid green;
+  border-radius: 14px;
 }
 
-svg {
-  /* width: 15px;
-  height: 100px; */
+.enemy-board {
+  position: relative;
+}
+.enemy-board.game-not-started::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-shadow: white 0px 0 5px;
+  backdrop-filter: blur(1px);
+}
+
+.start-game-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+
+  font-size: 2rem;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: none;
+  background-color: green;
+  color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.start-game-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.start-game-button:active {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.start-game-button.game-started,
+.random-board-button.game-started {
+  display: none;
+}
+
+.reset-game-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+}
+
+.reset-game-button {
+  display: none;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: none;
+  background-color: blue;
+  color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.reset-game-button:hover,
+.random-board-button:hover {
+  transform: scale(1.1);
+}
+
+.reset-game-button:active,
+.random-board-button:active {
+  transform: scale(1);
+}
+
+.reset-game-button.game-started {
+  display: block;
 }
 
 .hit-marker.hit {
@@ -66,25 +188,24 @@ svg {
 }
 
 .enemy-cell {
-  cursor: crosshair;
+  cursor: grab;
   position: relative;
 }
 
-.enemy-cell:hover {
-  background-color: rgb(218, 217, 217);
+.enemy-cell:not(.hit):hover {
+  content: url(cb221ef7be45d2eaab0b.svg);
 }
 
-.enemy-cell.hit::before {
+/* .enemy-cell.hit::before {
   content: '';
   width: 15px;
   height: 15px;
   position: absolute;
   top: 50%;
   left: 50%;
-  /* margin: -4px; */
   border-radius: 50%;
   background-color: #000000a9;
-}
+} */
 
 .cell[data-ship-name='carrier'] {
   background-color: green;
@@ -102,42 +223,32 @@ svg {
   background-color: yellow;
 }
 
-/*!**********************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./src/css/header.css ***!
-  \**********************************************************************/
 .game-title {
   background-color: rgb(151, 147, 147);
   padding: 10px;
   font-size: 2.5rem;
 }
 
-/*!****************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./src/css/message-info.css ***!
-  \****************************************************************************/
 .message-info {
   text-align: center;
   padding: 30px;
   font-size: 5rem;
   color: green;
-  display: hidden;
-
-  opacity: 1; /* Start with zero opacity */
-  animation: fadeOut 3s ease-in forwards; /* Use the fadeIn animation */
 }
 
-@keyframes fadeOut {
+.message-info.fade-out {
+  opacity: 1;
+  animation: fade-out 3s ease-in forwards;
+}
+
+@keyframes fade-out {
   from {
-    opacity: 1; /* Start with zero opacity */
+    opacity: 1;
   }
   to {
-    opacity: 0; /* End with full opacity */
+    opacity: 0;
   }
 }
 
-/*!**********************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./src/css/styles.css ***!
-  \**********************************************************************/
 
 
-
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibWFpbi5jc3MiLCJtYXBwaW5ncyI6Ijs7O0FBQUE7RUFDRSxlQUFlO0FBQ2pCOztBQUVBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFFQTtFQUNFLGFBQWE7QUFDZjs7Ozs7QUNYQTtFQUNFLGFBQWE7RUFDYix1QkFBdUI7RUFDdkIsbUJBQW1CO0VBQ25CLFNBQVM7O0VBRVQ7aUJBQ2U7QUFDakI7O0FBRUE7RUFDRSxrQkFBa0I7RUFDbEIsWUFBWTtBQUNkOztBQUVBO0VBQ0UsYUFBYTtFQUNiLHNDQUFzQztFQUN0QyxtQ0FBbUM7RUFDbkMsYUFBYTs7RUFFYixZQUFZO0VBQ1osYUFBYTtBQUNmOztBQUVBO0VBQ0UsdUJBQXVCO0FBQ3pCOztBQUVBO0VBQ0U7a0JBQ2dCO0FBQ2xCOztBQUVBO0VBQ0UsU0FBUztBQUNYOztBQUVBO0VBQ0UsVUFBVTtBQUNaOztBQUVBO0VBQ0UsYUFBYTtFQUNiLHVCQUF1QjtFQUN2QixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxpQkFBaUI7RUFDakIsa0JBQWtCO0FBQ3BCOztBQUVBO0VBQ0Usb0NBQW9DO0FBQ3RDOztBQUVBO0VBQ0UsV0FBVztFQUNYLFdBQVc7RUFDWCxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLFFBQVE7RUFDUixTQUFTO0VBQ1Qsa0JBQWtCO0VBQ2xCLGtCQUFrQjtFQUNsQiwyQkFBMkI7QUFDN0I7O0FBRUE7RUFDRSx1QkFBdUI7QUFDekI7QUFDQTtFQUNFLHNCQUFzQjtBQUN4QjtBQUNBO0VBQ0UsbUNBQW1DO0FBQ3JDO0FBQ0E7RUFDRSx3QkFBd0I7QUFDMUI7QUFDQTtFQUNFLHdCQUF3QjtBQUMxQjs7Ozs7QUNuRkE7RUFDRSxvQ0FBb0M7RUFDcEMsYUFBYTtFQUNiLGlCQUFpQjtBQUNuQjs7Ozs7QUNKQTtFQUNFLGtCQUFrQjtFQUNsQixhQUFhO0VBQ2IsZUFBZTtFQUNmLFlBQVk7RUFDWixlQUFlOztFQUVmLFVBQVUsRUFBRSw0QkFBNEI7RUFDeEMsc0NBQXNDLEVBQUUsNkJBQTZCO0FBQ3ZFOztBQUVBO0VBQ0U7SUFDRSxVQUFVLEVBQUUsNEJBQTRCO0VBQzFDO0VBQ0E7SUFDRSxVQUFVLEVBQUUsMEJBQTBCO0VBQ3hDO0FBQ0YiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9iYXR0bGVzaGlwLy4vc3JjL2Nzcy9nbG9iYWwuY3NzIiwid2VicGFjazovL2JhdHRsZXNoaXAvLi9zcmMvY3NzL2dhbWVib2FyZC5jc3MiLCJ3ZWJwYWNrOi8vYmF0dGxlc2hpcC8uL3NyYy9jc3MvaGVhZGVyLmNzcyIsIndlYnBhY2s6Ly9iYXR0bGVzaGlwLy4vc3JjL2Nzcy9tZXNzYWdlLWluZm8uY3NzIl0sInNvdXJjZXNDb250ZW50IjpbIjpyb290IHtcbiAgZm9udC1zaXplOiAxNnB4O1xufVxuXG4qIHtcbiAgbWFyZ2luOiAwO1xuICBwYWRkaW5nOiAwO1xufVxuXG5ib2R5IHtcbiAgaGVpZ2h0OiAxMDB2aDtcbn1cbiIsIi5nYW1lLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBnYXA6IDUwcHg7XG5cbiAgLyogd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogMTAwJTsgKi9cbn1cblxuLmJvYXJkLWNvbnRhaW5lciBoMSB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgcGFkZGluZzogNXB4O1xufVxuXG4uZ2FtZWJvYXJkIHtcbiAgZGlzcGxheTogZ3JpZDtcbiAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiByZXBlYXQoMTAsIDFmcik7XG4gIGdyaWQtdGVtcGxhdGUtcm93czogcmVwZWF0KDEwLCAxZnIpO1xuICBncmlkLWdhcDogMXB4O1xuXG4gIHdpZHRoOiA1MDBweDtcbiAgaGVpZ2h0OiA1MDBweDtcbn1cblxuLmdhbWVib2FyZCAuY2VsbCB7XG4gIGJvcmRlcjogMXB4IHNvbGlkIGdyZWVuO1xufVxuXG5zdmcge1xuICAvKiB3aWR0aDogMTVweDtcbiAgaGVpZ2h0OiAxMDBweDsgKi9cbn1cblxuLmhpdC1tYXJrZXIuaGl0IHtcbiAgZmlsbDogcmVkO1xufVxuXG4uaGl0LW1hcmtlci5taXNzIHtcbiAgZmlsbDogYmx1ZTtcbn1cblxuLmNlbGwge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuLmVuZW15LWNlbGwge1xuICBjdXJzb3I6IGNyb3NzaGFpcjtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4uZW5lbXktY2VsbDpob3ZlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMTgsIDIxNywgMjE3KTtcbn1cblxuLmVuZW15LWNlbGwuaGl0OjpiZWZvcmUge1xuICBjb250ZW50OiAnJztcbiAgd2lkdGg6IDE1cHg7XG4gIGhlaWdodDogMTVweDtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB0b3A6IDUwJTtcbiAgbGVmdDogNTAlO1xuICAvKiBtYXJnaW46IC00cHg7ICovXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzAwMDAwMGE5O1xufVxuXG4uY2VsbFtkYXRhLXNoaXAtbmFtZT0nY2FycmllciddIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogZ3JlZW47XG59XG4uY2VsbFtkYXRhLXNoaXAtbmFtZT0nYmF0dGxlc2hpcCddIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogYmx1ZTtcbn1cbi5jZWxsW2RhdGEtc2hpcC1uYW1lPSdjcnVpc2VyJ10ge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjI4LCAxODIsIDMxKTtcbn1cbi5jZWxsW2RhdGEtc2hpcC1uYW1lPSdzdWJtYXJpbmUnXSB7XG4gIGJhY2tncm91bmQtY29sb3I6IHB1cnBsZTtcbn1cbi5jZWxsW2RhdGEtc2hpcC1uYW1lPSdkZXN0cm95ZXInXSB7XG4gIGJhY2tncm91bmQtY29sb3I6IHllbGxvdztcbn1cbiIsIi5nYW1lLXRpdGxlIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDE1MSwgMTQ3LCAxNDcpO1xuICBwYWRkaW5nOiAxMHB4O1xuICBmb250LXNpemU6IDIuNXJlbTtcbn1cbiIsIi5tZXNzYWdlLWluZm8ge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHBhZGRpbmc6IDMwcHg7XG4gIGZvbnQtc2l6ZTogNXJlbTtcbiAgY29sb3I6IGdyZWVuO1xuICBkaXNwbGF5OiBoaWRkZW47XG5cbiAgb3BhY2l0eTogMTsgLyogU3RhcnQgd2l0aCB6ZXJvIG9wYWNpdHkgKi9cbiAgYW5pbWF0aW9uOiBmYWRlT3V0IDNzIGVhc2UtaW4gZm9yd2FyZHM7IC8qIFVzZSB0aGUgZmFkZUluIGFuaW1hdGlvbiAqL1xufVxuXG5Aa2V5ZnJhbWVzIGZhZGVPdXQge1xuICBmcm9tIHtcbiAgICBvcGFjaXR5OiAxOyAvKiBTdGFydCB3aXRoIHplcm8gb3BhY2l0eSAqL1xuICB9XG4gIHRvIHtcbiAgICBvcGFjaXR5OiAwOyAvKiBFbmQgd2l0aCBmdWxsIG9wYWNpdHkgKi9cbiAgfVxufVxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9*/

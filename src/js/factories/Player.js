@@ -10,7 +10,9 @@ function Player(gameboard) {
         let enemyGameboard = player.gameboard;
         enemyGameboard.receiveAttack(row, col);
         availableHits[row][col] = false;
+        return true;
       }
+      return false;
     },
     hasAvailableHit(row, col) {
       return availableHits[row][col];
